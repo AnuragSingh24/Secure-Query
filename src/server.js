@@ -11,7 +11,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: 'https://secure-query-ai.vercel.app/',
+  origin: 'https://secure-query-ai.vercel.app',
   credentials: true
 }));
 
