@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  EMPLOYEE
+  ANALYST
+}
+model AdminLog {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  userName       String
+  userRole       Role
+  prompt         String
+  step0Result    String   // YES, NO, or error
+  step1SQL       String?
+  step2Decision  String?
+  timestamp      DateTime @default(now())
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  password     String
+  name         String
+  role         Role      @default(EMPLOYEE)
+  isVerified   Boolean?  @default(false)
+  otp          String?   @db.Text
+  otpExpiresAt DateTime?
+  createdAt    DateTime  @default(now())
+}
+
+model EmployeeDetails {
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  department String
+  joinDate   DateTime @default(now())
+  createdBy  Int
+  ssn        String   @unique // Added SSN field
+}
+model PayrollData {
+  id           Int      @id @default(autoincrement())
+  employeeId   Int
+  salary       Float
+  bonus        Float?
+  lastUpdated  DateTime @default(now())
+  processedBy  Int
+}
+
+model ProjectInfo {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  startDate   DateTime
+  endDate     DateTime?
+  createdBy   Int
+}
