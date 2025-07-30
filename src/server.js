@@ -10,8 +10,25 @@ import queryRoutes from './routes/queryRoutes.js';
 dotenv.config();
 const app = express();
 
+// app.use(cors({
+//   origin: 'https://secure-query-ai.vercel.app',
+//   credentials: true
+// }));
+
+const allowedOrigins = [
+  'https://secure-query-ai.vercel.app',
+  'http://localhost:5173'
+];
+
 app.use(cors({
-  origin: 'https://secure-query-ai.vercel.app',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (e.g., mobile apps or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
